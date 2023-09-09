@@ -1,18 +1,16 @@
+# -*- coding: utf-8 -*-
 from selenium import webdriver as wd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-from bs4 import BeautifulSoup as bs
 import time
 
-url = "http://bseu.by/schedule/"
-
-def perform_timetable_parsing_week():
+def perform_parsing_week():
 
     driver = wd.Chrome()
     # Открываем страницу сайта
-    driver.get(url)
+    driver.get("http://bseu.by/schedule/")
 
-    def timetable_parsing_tomorrow():
+    def parsing_week():
         faculty_select = Select(driver.find_element(By.ID, "faculty"))
         faculty_select.select_by_visible_text("ФЦЭ")
         time.sleep(0.2)
@@ -29,62 +27,42 @@ def perform_timetable_parsing_week():
         group_select.select_by_visible_text("23 ДЦИ-1 | Экономическая информатика")
         time.sleep(0.2)
 
-        select_period = driver.find_element(By.ID, "pday")
+        select_period = driver.find_element(By.ID, "pweek")
         select_period.click()
         time.sleep(0.2)
 
         btn_click = driver.find_element(By.ID, "btn")
         btn_click.click()
 
-        time.sleep(0.5)
+        time.sleep(0.3)
 
-        page_source = driver.page_source
-        soup = bs(page_source, 'html.parser')
-        select_period = soup.find_element(By.ID, "pday")
+    parsing_week()
 
-        table = soup.find('table', class_='schedule-table')
-
-        return f'Расписание на сегодня:/n'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    timetable_parsing_tomorrow()
-
-    # Теперь вы можете извлечь информацию из расписания, например, с помощью XPath или CSS-селекторов
-    schedule_elements = driver.find_elements(By.XPATH, "//div[@id='content']")
-    schedule_text = "\n".join([element.text for element in schedule_elements])
+    schedule_elements = driver.find_element(By.ID, "content")
+    schedule_text = schedule_elements.text
 
     driver.quit()
-    return schedule_text
 
+    def extract_text_between_words(input_text, start_word, stop_word):
+        # Ищем индекс начала и конца искомого текста
+        start_index = input_text.find(start_word)
+        stop_index = input_text.find(stop_word)
+
+        # Проверяем, что стартовое и стоповое слова найдены
+        if start_index == -1 or stop_index == -1:
+            return None  # Возвращаем None, если слова не найдены
+
+        # Извлекаем текст между стартовым и стоповым словами
+        extracted_text = input_text[start_index + len(start_word):stop_index]
+
+        return extracted_text
     
+    start_word = 'к./ауд.'
+    stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
+    result = extract_text_between_words(schedule_text, start_word, stop_word)
+    if result is not None:
+        return result
+    else:
+        return "Ошибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."
     
-    
+
