@@ -22,26 +22,26 @@ class FeedbackStates(StatesGroup):
 async def cmd_start(message: Message):
     await message.answer("Привет! Это бот с учебных расписанием для БГЭУ.\nПока что расписание работает только для ДЦИ-1, 1 курс, 23 ДЦИ-1", reply_markup=kb.main)
 
-@router.message(F.text.lower() == "сегодня")
+@router.message(F.text.lower() == "сегодня 📖")
 async def today(message: Message):
     text = perform_parsing_today()
     await message.answer(f"<b>Раписание на сегодня:</b>{text}", parse_mode='HTML')
 
-@router.message(F.text.lower() == "завтра")
+@router.message(F.text.lower() == "завтра 📐")
 async def tomorrow(message: Message):
     text = perform_parsing_tomorrow()
     await message.answer(f"<b>Раписание на завтра:</b>{text}", parse_mode='HTML')
 
-@router.message(F.text.lower() == "неделя")
+@router.message(F.text.lower() == "неделя 📆")
 async def week(message: Message):
     text = perform_parsing_week()
     await message.answer(f"<b>Раписание на неделю:</b>{text}", parse_mode='HTML')
 
-@router.message(F.text.lower() == "дополнительно")
+@router.message(F.text.lower() == "дополнительно ⚙️")
 async def more(message: Message):
     await message.answer("Открываем доп. меню...", reply_markup=kb.additional_menu)
 
-@router.message(F.text.lower() == "написать отзыв/жалобу")
+@router.message(F.text.lower() == "написать отзыв/жалобу 💌")
 async def feedback(message: Message, state: FSMContext):
     await message.answer("Напишите Ваш отзыв/жалобу, мы их обязательно прочтём!", reply_markup=kb.feedback_menu)
     await state.set_state(FeedbackStates.feedback_waiting)
@@ -52,15 +52,15 @@ async def process_feedback(message: Message, state: FSMContext):
     await message.answer("Сообщение отправлено разработчику. Спасибо!")
     await state.clear()
 
-@router.message(F.text.lower() == "возврат в доп. меню")
+@router.message(F.text.lower() == "возврат в доп. меню 🔙")
 async def go_back(message: Message):
     await message.answer("Возвращаемся...", reply_markup=kb.additional_menu)
 
-@router.message(F.text.lower() == "авторы")
+@router.message(F.text.lower() == "авторы 👑")
 async def authors(message: Message):
     await message.answer("<b>Авторы этого замечательного бота:</b>\n@CookieRevolution и @ppestikk", parse_mode='HTML')
 
-@router.message(F.text.lower() == "назад")
+@router.message(F.text.lower() == "назад 🔙")
 async def back(message: Message):
     await message.answer("Возвращаемся...", reply_markup=kb.main)
 

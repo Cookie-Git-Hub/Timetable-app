@@ -58,6 +58,15 @@ def perform_parsing_tomorrow():
 
         return extracted_text
     
+    def make_digits_bold(text):
+        digits_bold = ''
+        for char in text:
+            if char.isdigit():
+                digits_bold += f'<b>{char}</b>'
+            else:
+                digits_bold += char
+        return digits_bold
+    
     # Создаем список с названиями дней недели
     days_of_week = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
     # Получаем текущую дату
@@ -73,14 +82,12 @@ def perform_parsing_tomorrow():
     week_day1 = days_of_week[tomorrow_day]
     week_day2 = days_of_week[after_tomorrow_day]
     
-
     start_day = f'{week_day1} ({formatted_date_day1})'
     stop_day = f'{week_day2} ({formatted_date_day2})'
-    print(start_day)
-    print(stop_day)
     result = extract_text_between_words(schedule_text, start_day, stop_day)
     if result is not None:
-        return result
+        text_with_bold_digits = make_digits_bold(result)
+        return text_with_bold_digits
     else:
         return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."
     

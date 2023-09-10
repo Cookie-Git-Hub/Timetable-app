@@ -3,6 +3,7 @@ from selenium import webdriver as wd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 import time
+import re
 
 def perform_parsing_week():
 
@@ -57,11 +58,26 @@ def perform_parsing_week():
 
         return extracted_text
     
+    def make_digits_bold(text):
+        digits_bold = ''
+        for char in text:
+            if char.isdigit():
+                digits_bold += f'<b>{char}</b>'
+            else:
+                digits_bold += char
+        return digits_bold
+    
+    result_list = []
     start_word = 'к./ауд.'
     stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
     result = extract_text_between_words(schedule_text, start_word, stop_word)
     if result is not None:
-        return result
+        result_parts = re.split(r'\n(?=\b[а-я]+\s\(\d+\.\d+\.\d+\))', result)
+        for result_part in result_parts:
+            result_list.append(result_part)
+        result_text = '\n---------------------------------------------------------------------\n'.join(result_list)
+        text_with_bold_digits = make_digits_bold(result_text)
+        return text_with_bold_digits
     else:
         return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."
     

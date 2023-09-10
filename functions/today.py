@@ -57,16 +57,25 @@ def perform_parsing_today():
 
         return extracted_text
     
+    def make_digits_bold(text):
+        digits_bold = ''
+        for char in text:
+            if char.isdigit():
+                digits_bold += f'<b>{char}</b>'
+            else:
+                digits_bold += char
+        return digits_bold
+    
     start_word = 'к./ауд.'
     stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
     result = extract_text_between_words(schedule_text, start_word, stop_word)
     if result is not None:
-        return result
+        text_with_bold_digits = make_digits_bold(result)
+        return text_with_bold_digits
     else:
         start_word = 'Расписание занятий в БГЭУ'
         stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
         result2 = extract_text_between_words(schedule_text, start_word, stop_word)
-        print(result2)
         if result2 is not None:
             return '\nРасписание не найдено. Вероятно, сегодня выходной.'
         else:
