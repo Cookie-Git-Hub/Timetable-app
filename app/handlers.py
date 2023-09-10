@@ -14,13 +14,13 @@ router = Router()
 
 bot = Bot(os.getenv('TOKEN'))
 
-class OrderFood(StatesGroup):
+class FeedbackStates(StatesGroup):
     feedback_waiting = State()
 
 # Хэндлер на команду /start
 @router.message(F.text == '/start')
 async def cmd_start(message: Message):
-    await message.answer("Привет! Это бот с учебных расписанием для БГЭУ.\nПока что расписание работает только для ФЦЭ, 1 курс, 23 ДЦИ-1", reply_markup=kb.main)
+    await message.answer("Привет! Это бот с учебных расписанием для БГЭУ.\nПока что расписание работает только для ДЦИ-1, 1 курс, 23 ДЦИ-1", reply_markup=kb.main)
 
 @router.message(F.text.lower() == "сегодня")
 async def today(message: Message):
@@ -44,9 +44,13 @@ async def more(message: Message):
 @router.message(F.text.lower() == "написать отзыв/жалобу")
 async def feedback(message: Message, state: FSMContext):
     await message.answer("Напишите Ваш отзыв/жалобу, мы их обязательно прочтём!", reply_markup=kb.feedback_menu)
-    await state.update_data(feedback_text=message.text.lower())
+    await state.set_state(FeedbackStates.feedback_waiting)
+
+@router.message(FeedbackStates.feedback_waiting)
+async def process_feedback(message: Message, state: FSMContext):
     await bot.forward_message(os.getenv('ID'), message.from_user.id, message.message_id)
     await message.answer("Сообщение отправлено разработчику. Спасибо!")
+    await state.clear()
 
 @router.message(F.text.lower() == "возврат в доп. меню")
 async def go_back(message: Message):
