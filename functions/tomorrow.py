@@ -62,18 +62,20 @@ def perform_parsing_tomorrow():
     days_of_week = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
     # Получаем текущую дату
     today = datetime.date.today()
-    today_day = today.weekday()
-    # Вычисляем завтрашнюю дату
-    tomorrow = today + datetime.timedelta(days=1)
-    tomorrow_day = tomorrow.weekday()
+    # Вычисляем завтрашнюю и послезавтрашнюю даты
+    day1 = today + datetime.timedelta(days=1)
+    day2 = today + datetime.timedelta(days=2)
+    tomorrow_day = day1.weekday()
+    after_tomorrow_day = day2.weekday()
     # Форматируем дату в формат (день.месяц.год)
-    formatted_date_today = today.strftime("%d.%m.%Y")
-    formatted_date_tomorrow = tomorrow.strftime("%d.%m.%Y")
-    week_today = days_of_week[today_day]
-    week_tomorrow = days_of_week[tomorrow_day]
+    formatted_date_day1 = "{}.{}.{}".format(day1.day, day1.month, day1.year)
+    formatted_date_day2 = "{}.{}.{}".format(day2.day, day2.month, day2.year)
+    week_day1 = days_of_week[tomorrow_day]
+    week_day2 = days_of_week[after_tomorrow_day]
+    
 
-    start_day = f'{week_today} ({formatted_date_today})'
-    stop_day = f'{week_tomorrow} ({formatted_date_tomorrow})'
+    start_day = f'{week_day1} ({formatted_date_day1})'
+    stop_day = f'{week_day2} ({formatted_date_day2})'
     print(start_day)
     print(stop_day)
     result = extract_text_between_words(schedule_text, start_day, stop_day)
