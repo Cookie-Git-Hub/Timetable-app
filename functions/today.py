@@ -63,6 +63,13 @@ def perform_parsing_today():
     if result is not None:
         return result
     else:
-        return "Ошибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."
+        start_word = 'Расписание занятий в БГЭУ'
+        stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
+        result2 = extract_text_between_words(schedule_text, start_word, stop_word)
+        print(result2)
+        if result2 is not None:
+            return '\nРасписание не найдено. Вероятно, сегодня выходной.'
+        else:
+            return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."
     
     
