@@ -49,8 +49,12 @@ async def feedback(message: Message, state: FSMContext):
 @router.message(FeedbackStates.feedback_waiting)
 async def process_feedback(message: Message, state: FSMContext):
     await bot.forward_message(os.getenv('ID'), message.from_user.id, message.message_id)
-    await message.answer("Сообщение отправлено разработчику. Спасибо!")
-    await state.clear()
+    if message.text != "Возврат в доп. меню 🔙":    
+        await message.answer("Сообщение отправлено разработчику. Спасибо!")
+        await state.clear()
+    else:
+        async def go_back(message: Message):
+            await message.answer("Возвращаемся...", reply_markup=kb.additional_menu)
 
 @router.message(F.text.lower() == "возврат в доп. меню 🔙")
 async def go_back(message: Message):

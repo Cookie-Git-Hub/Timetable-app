@@ -7,8 +7,9 @@ import datetime
 
 def perform_parsing_tomorrow():
 
-    driver = wd.Chrome()
-    # Открываем страницу сайта
+    options = wd.ChromeOptions()
+    options.add_argument("--headless")
+    driver = wd.Chrome(options=options)
     driver.get("http://bseu.by/schedule/")
 
     def parsing_tomorrow():

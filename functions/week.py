@@ -7,8 +7,9 @@ import re
 
 def perform_parsing_week():
 
-    driver = wd.Chrome()
-    # Открываем страницу сайта
+    options = wd.ChromeOptions()
+    options.add_argument("--headless")
+    driver = wd.Chrome(options=options)
     driver.get("http://bseu.by/schedule/")
 
     def parsing_week():
