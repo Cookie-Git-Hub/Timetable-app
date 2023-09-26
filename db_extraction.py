@@ -16,11 +16,11 @@ def print_today_schedule():
 
 def print_tomorrow_schedule():
     if tomorrow_schedule is not None:
-        return tomorrow_schedule[0]
+        return tomorrow_schedule[1]
 
 def print_week_schedule():
     if week_schedule is not None:
-        return week_schedule[0]  
+        return week_schedule[2]  
 
 # Закрытие соединения с базой данных
 connection.close()
