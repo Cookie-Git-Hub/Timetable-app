@@ -1,5 +1,5 @@
 from aiogram import Router, F, Bot
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 import app.keyboards as kb
@@ -17,10 +17,79 @@ bot = Bot(os.getenv('TOKEN'))
 class FeedbackStates(StatesGroup):
     feedback_waiting = State()
 
+faculty_list = [
+    "Аспир.", "ВШУБ", "ИСГО", "Магистр.", "УЭФ", "ФКТИ", "ФМБК", "ФМк", "ФМЭО", "ФП", "ФФБД", "ФЦЭ", "ФЭМ"
+]
+
+group_list = [
+    
+]
+
 # Хэндлер на команду /start
 @router.message(F.text == '/start')
 async def cmd_start(message: Message):
-    await message.answer("Привет! Это бот с учебных расписанием для БГЭУ.\nПока что расписание работает только для ДЦИ-1, 1 курс, 23 ДЦИ-1", reply_markup=kb.main)
+    await message.answer("Привет! Чтобы я знал какое расписание тебе показывать, сначала придётся пройти мини-регистрацию. Напиши название своего факультета ниже 👾\nПример: ФЦЭ ✅", reply_markup=kb.main)
+
+@router.message()
+async def faclty(message: Message):
+    if message.text in faculty_list:
+        global faculty
+        faculty = message.text
+        await message.answer('Выберите форму обучения', reply_markup=kb.form_select)
+    else:
+        await message.answer('Ошибка🤕\nВозможные проблемы:\n1. Неправильно указан факультет(проверьте, совпадает ли написанный вами факультет с тем, как он написан на сайте университета с расписанием).\n2. Этот факультет не обслуживается, чтобы увидеть список обсуживаемых факультетов, напишите "/list".\n3. Возможна ошибка в работе бота, просьба повторить попытку через несколько минут.')
+    
+@router.callback_query(F.data == 'Дневная')
+async def day_form(callback: CallbackQuery):
+    global stationarity
+    stationarity = callback.data
+    await callback.message.answer(f'Выбранная форма обучения: <b>{callback.data}</b>', parse_mode='HTML')
+    await callback.message.answer('Выберите курс', reply_markup = kb.course_select)
+
+@router.callback_query(F.data == 'Заочная')
+async def day_form(callback: CallbackQuery):
+    global stationarity
+    stationarity = callback.data
+    await callback.message.answer(f'Выбранная форма обучения: <b>{callback.data}</b>', parse_mode='HTML')
+    await callback.message.answer('Выберите курс', reply_markup = kb.course_select)
+
+@router.callback_query(F.data == '1')
+async def day_form(callback: CallbackQuery):
+    global course
+    course = callback.data
+    await callback.message.answer(f'Выбранный курс: <b>{callback.data}</b>', parse_mode='HTML')
+    await callback.message.answer('Напишите название вашей группы\nПример: 23 ДЦИ-1 ✅')
+
+@router.callback_query(F.data == '2')
+async def day_form(callback: CallbackQuery):
+    global course
+    course = callback.data
+    await callback.message.answer(f'Выбранный курс: <b>{callback.data}</b>', parse_mode='HTML')
+    await callback.message.answer('Напишите название вашей группы\nПример: 23 ДЦИ-1 ✅')
+
+@router.callback_query(F.data == '3')
+async def day_form(callback: CallbackQuery):
+    global course
+    course = callback.data
+    await callback.message.answer(f'Выбранная форма обучения: <b>{callback.data}</b>', parse_mode='HTML')
+    await callback.message.answer('Напишите название вашей группы\nПример: 23 ДЦИ-1 ✅')
+
+@router.callback_query(F.data == '4')
+async def day_form(callback: CallbackQuery):
+    global course
+    course = callback.data
+    await callback.message.answer(f'Выбранная форма обучения: <b>{callback.data}</b>', parse_mode='HTML')
+    await callback.message.answer('Напишите название вашей группы\nПример: 23 ДЦИ-1 ✅')
+
+@router.message()
+async def faclty(message: Message):
+    if message.text in group_list:
+            global group
+            group = message.text
+            await message.answer(f'Выбранная группа: <b>{group}</b>', parse_mode='HTML')
+            await message.answer('<b>Регистрация закончена!\nБлагодарю за ожидание, теперь вы можете перейти к использованию бота. Если возникнут какие-то проблемы, не стесняйтесь пользоваться обратной связью</b> 💌', parse_mode='HTML')
+    else:
+        await message.answer('Ошибка🤕\nВозможные проблемы:\n1. Неправильно указана группа(проверьте, совпадает ли написанная вами группа с тем, как она написана на сайте университета с расписанием).\n2. Возможна ошибка в работе бота, просьба повторить попытку через несколько минут.')
 
 @router.message(F.text.lower() == "сегодня 📖")
 async def today(message: Message):
