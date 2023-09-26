@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 import time
 
+
 def perform_parsing_today():
 
     # driver = wd.Chrome()
@@ -39,11 +40,10 @@ def perform_parsing_today():
         btn_click = driver.find_element(By.ID, "btn")
         btn_click.click()
 
-        time.sleep(0.3)
+        time.sleep(0.2)
 
     parsing_today()
 
-    # Теперь вы можете извлечь информацию из расписания, например, с помощью XPath или CSS-селекторов
     schedule_elements = driver.find_element(By.ID, "content")
     schedule_text = schedule_elements.text
 
@@ -63,21 +63,22 @@ def perform_parsing_today():
 
         return extracted_text
     
-    def make_digits_bold(text):
-        digits_bold = ''
-        for char in text:
-            if char.isdigit():
-                digits_bold += f'<b>{char}</b>'
-            else:
-                digits_bold += char
-        return digits_bold
+    # def make_digits_bold(text):
+    #     digits_bold = ''
+    #     for char in text:
+    #         if char.isdigit():
+    #             digits_bold += f'<b>{char}</b>'
+    #         else:
+    #             digits_bold += char
+    #     return digits_bold
     
     start_word = 'к./ауд.'
     stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
     result = extract_text_between_words(schedule_text, start_word, stop_word)
     if result is not None:
-        text_with_bold_digits = make_digits_bold(result)
-        return text_with_bold_digits
+        # text_with_bold_digits = make_digits_bold(result)
+        # return text_with_bold_digits
+        return result
     else:
         start_word = 'Расписание занятий в БГЭУ'
         stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'

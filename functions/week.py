@@ -36,7 +36,7 @@ def perform_parsing_week():
         btn_click = driver.find_element(By.ID, "btn")
         btn_click.click()
 
-        time.sleep(0.3)
+        time.sleep(0.2)
 
     parsing_week()
 
@@ -59,14 +59,14 @@ def perform_parsing_week():
 
         return extracted_text
     
-    def make_digits_bold(text):
-        digits_bold = ''
-        for char in text:
-            if char.isdigit():
-                digits_bold += f'<b>{char}</b>'
-            else:
-                digits_bold += char
-        return digits_bold
+    # def make_digits_bold(text):
+    #     digits_bold = ''
+    #     for char in text:
+    #         if char.isdigit():
+    #             digits_bold += f'<b>{char}</b>'
+    #         else:
+    #             digits_bold += char
+    #     return digits_bold
     
     result_list = []
     start_word = 'к./ауд.'
@@ -77,8 +77,9 @@ def perform_parsing_week():
         for result_part in result_parts:
             result_list.append(result_part)
         result_text = '\n---------------------------------------------------------------------\n'.join(result_list)
-        text_with_bold_digits = make_digits_bold(result_text)
-        return text_with_bold_digits
+        # text_with_bold_digits = make_digits_bold(result_text)
+        # return text_with_bold_digits
+        return result_text
     else:
         return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."
     

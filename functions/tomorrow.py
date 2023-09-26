@@ -36,7 +36,7 @@ def perform_parsing_tomorrow():
         btn_click = driver.find_element(By.ID, "btn")
         btn_click.click()
 
-        time.sleep(0.3)
+        time.sleep(0.2)
 
     parsing_tomorrow()
 
@@ -59,14 +59,14 @@ def perform_parsing_tomorrow():
 
         return extracted_text
     
-    def make_digits_bold(text):
-        digits_bold = ''
-        for char in text:
-            if char.isdigit():
-                digits_bold += f'<b>{char}</b>'
-            else:
-                digits_bold += char
-        return digits_bold
+    # def make_digits_bold(text):
+    #     digits_bold = ''
+    #     for char in text:
+    #         if char.isdigit():
+    #             digits_bold += f'<b>{char}</b>'
+    #         else:
+    #             digits_bold += char
+    #     return digits_bold
     
     # Создаем список с названиями дней недели
     days_of_week = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
@@ -87,8 +87,9 @@ def perform_parsing_tomorrow():
     stop_day = f'{week_day2} ({formatted_date_day2})'
     result = extract_text_between_words(schedule_text, start_day, stop_day)
     if result is not None:
-        text_with_bold_digits = make_digits_bold(result)
-        return text_with_bold_digits
+        # text_with_bold_digits = make_digits_bold(result)
+        # return text_with_bold_digits
+        return result
     else:
         return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."
     

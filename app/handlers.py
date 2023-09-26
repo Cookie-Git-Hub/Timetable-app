@@ -3,9 +3,9 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 import app.keyboards as kb
-from functions.today import perform_parsing_today
-from functions.tomorrow import perform_parsing_tomorrow
-from functions.week import perform_parsing_week
+from db_extraction import print_today_schedule
+from db_extraction import print_tomorrow_schedule
+from db_extraction import print_week_schedule
 from dotenv import load_dotenv
 import os
 
@@ -24,17 +24,17 @@ async def cmd_start(message: Message):
 
 @router.message(F.text.lower() == "сегодня 📖")
 async def today(message: Message):
-    text = perform_parsing_today()
+    text = print_today_schedule()
     await message.answer(f"<b>Раписание на сегодня:</b>{text}", parse_mode='HTML')
 
 @router.message(F.text.lower() == "завтра 📐")
 async def tomorrow(message: Message):
-    text = perform_parsing_tomorrow()
+    text = print_tomorrow_schedule()
     await message.answer(f"<b>Раписание на завтра:</b>{text}", parse_mode='HTML')
 
 @router.message(F.text.lower() == "неделя 📆")
 async def week(message: Message):
-    text = perform_parsing_week()
+    text = print_week_schedule()
     await message.answer(f"<b>Раписание на неделю:</b>{text}", parse_mode='HTML')
 
 @router.message(F.text.lower() == "дополнительно ⚙️")
