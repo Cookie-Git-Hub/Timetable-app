@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
+
 import json
 
 def user_registration(user_id, faculty, course, group):
     # Проверяем, зарегистрирован ли пользователь
-    with open('db/users.json', 'r', encoding='utf-8') as json_file:
+    with open('db/users.json', 'r') as json_file:
         data = json.load(json_file)
 
     users = data.get("users", [])
@@ -26,14 +26,14 @@ def user_registration(user_id, faculty, course, group):
     # Сохраняем обновленные данные в JSON-файл
     data["users"] = users
 
-    with open('db/users.json', 'w', encoding='utf-8') as json_file:
+    with open('db/users.json', 'w') as json_file:
         json.dump(data, json_file, indent=4)
 
     return "Вы были успешно зарегистрированы!"
 
 def is_user_blocked(user_id):
     try:
-        with open('db/users.json', 'r', encoding='utf-8') as json_file:
+        with open('db/users.json', 'r') as json_file:
             data = json.load(json_file)
             users = data.get("users", [])
     except FileNotFoundError:
@@ -47,7 +47,7 @@ def is_user_blocked(user_id):
 
 def remove_user(user_id):
     try:
-        with open('db/users.json', 'r', encoding='utf-8') as json_file:
+        with open('db/users.json', 'r') as json_file:
             data = json.load(json_file)
             users = data.get("users", [])
     except FileNotFoundError:
@@ -55,6 +55,6 @@ def remove_user(user_id):
 
     updated_users = [user for user in users if user["id"] != user_id]
 
-    with open('db/users.json', 'w', encoding='utf-8') as json_file:
+    with open('db/users.json', 'w') as json_file:
         json.dump({"users": updated_users}, json_file, indent=4)
     return True

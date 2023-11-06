@@ -1,4 +1,5 @@
-from parsing import perform_parsing
+from functions.parsing import perform_parsing
+from db import fill_db
 
 import json
     
@@ -9,7 +10,7 @@ def get_user_data(user_id):
 
     for user in users:
         if user["id"] == user_id:
-            return user.get("faculty"), user.get("course"), user.get("group")
+            return user
 
     return None, None, None  # Возвращаем None, если пользователь не найден
 

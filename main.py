@@ -3,7 +3,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from app.handlers import router
 from dotenv import load_dotenv
-from functions.crutch import decode
+# from functions.crutch import decode
 import os
 
 load_dotenv()

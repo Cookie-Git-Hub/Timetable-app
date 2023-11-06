@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 import datetime
 import re
-from distribution import user_data_variables
+from functions.distribution import user_data_variables
 
 
 def extract_text_between_words(input_text, start_word, stop_word):
@@ -47,13 +46,12 @@ def perform_parsing_today(user_id):
     start_day = f'{week_day1} ({formatted_date_day1})'
     stop_day = f'{week_day2} ({formatted_date_day2})'
     result = extract_text_between_words(schedule_text, start_day, stop_day)
-    result = extract_text_between_words(schedule_text, start_word, stop_word)
     if result is not None:
         text_with_bold_digits = make_digits_bold(result)
         return text_with_bold_digits
     else:
         start_word = 'Расписание занятий в БГЭУ'
-        stop_word = 'Сервис носит информационный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
+        stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
         result2 = extract_text_between_words(
             schedule_text, start_word, stop_word)
         if result2 is not None:
@@ -65,7 +63,6 @@ def perform_parsing_today(user_id):
 def perform_parsing_tomorrow(user_id):
     schedule_text = []
     schedule_text = user_data_variables(user_id)[0]
-
     def make_digits_bold(text):
         digits_bold = ''
         for char in text:
@@ -104,7 +101,7 @@ def perform_parsing_tomorrow(user_id):
 def perform_parsing_week(user_id):
     schedule_text = []
     schedule_text = user_data_variables(user_id)[0]
-
+    print(schedule_text)
     def make_digits_bold(text):
         digits_bold = ''
         for char in text:
@@ -116,15 +113,13 @@ def perform_parsing_week(user_id):
 
     result_list = []
     start_word = 'к./ауд.'
-    stop_word = 'Сервис носит информационный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
+    stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
     result = extract_text_between_words(schedule_text, start_word, stop_word)
-    if result is not None:
-        result_parts = re.split(r'\n(?=\b[а-я]+\s\(\d+\.\d+\.\d+\))', result)
-        for result_part in result_parts:
-            result_list.append(result_part)
-        result_text = '\n---------------------------------------------------------------------\n'.join(
-            result_list)
-        text_with_bold_digits = make_digits_bold(result_text)
-        return text_with_bold_digits
-    else:
-        return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."
+    result_parts = re.split(r'\n(?=\b[а-я]+\s\(\d+\.\d+\.\d+\))', result)
+    for result_part in result_parts:
+        result_list.append(result_part)
+    result_text = '\n------------------------------------------------------------------------------\n'.join(
+        result_list)
+    text_with_bold_digits = make_digits_bold(result_text)
+    return text_with_bold_digits
+#    return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."

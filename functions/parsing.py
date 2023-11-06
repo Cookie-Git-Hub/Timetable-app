@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from selenium import webdriver as wd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
