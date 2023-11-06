@@ -1,7 +1,7 @@
 from parsing import perform_parsing
+
 import json
     
-text = perform_parsing()
 def get_user_data(user_id):
     with open('db/users.json', 'r') as json_file:
         data = json.load(json_file)
@@ -23,7 +23,10 @@ def user_data_variables(userid):
         course = user_data.get("course", "")
         group = user_data.get("group", "")
         
-        schedule_text = perform_parsing(faculty, course, group)
+        schedule_text = []
+        schedule_text = perform_parsing(faculty, course, group) 
+        fill_db(schedule_text)
+
         return schedule_text
     else:
         return "Вы не зарегистрированы. Пожалуйста, пройдите регистрацию."

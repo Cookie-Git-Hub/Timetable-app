@@ -17,6 +17,7 @@ def extract_text_between_words(input_text, start_word, stop_word):
 
 
 def perform_parsing_today(user_id):
+    schedule_text = []
     schedule_text = user_data_variables(user_id)[0]
 
     def make_digits_bold(text):
@@ -62,6 +63,7 @@ def perform_parsing_today(user_id):
 
 
 def perform_parsing_tomorrow(user_id):
+    schedule_text = []
     schedule_text = user_data_variables(user_id)[0]
 
     def make_digits_bold(text):
@@ -100,6 +102,7 @@ def perform_parsing_tomorrow(user_id):
 
 
 def perform_parsing_week(user_id):
+    schedule_text = []
     schedule_text = user_data_variables(user_id)[0]
 
     def make_digits_bold(text):

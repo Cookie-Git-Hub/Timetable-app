@@ -10,7 +10,7 @@ def perform_parsing(faculty, course, group):
     driver = wd.Chrome(options=options)
     driver.get("http://bseu.by/schedule/")
 
-    def parsing_tomorrow():
+    def parsing():
         faculty_select = Select(driver.find_element(By.ID, "faculty"))
         faculty_select.select_by_visible_text(f"{faculty}")
         time.sleep(0.2)
@@ -36,7 +36,7 @@ def perform_parsing(faculty, course, group):
 
         time.sleep(0.2)
 
-    parsing_tomorrow()
+    parsing()
 
     schedule_elements = driver.find_element(By.ID, "content")
     schedule_text = schedule_elements.text

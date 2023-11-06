@@ -3,10 +3,8 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 import app.keyboards as kb
-from db_extraction import print_today_schedule
-from db_extraction import print_tomorrow_schedule
-from db_extraction import print_week_schedule
 from functions.registration import user_registration, is_user_blocked, remove_user
+from functions.data_handling import perform_parsing_today, perform_parsing_tomorrow, perform_parsing_week
 from dotenv import load_dotenv
 import os
 
@@ -74,7 +72,7 @@ async def today(message: Message):
     if is_user_blocked(user_id):
         await message.answer("Ты плохо себя вёл, так что я тебя заблокировал 🤡.")
     else:
-        text = print_today_schedule()
+        text = perform_parsing_today(user_id)
         await message.answer(f"<b>Расписание на сегодня:</b>{text}", parse_mode='HTML')
 
 
@@ -84,7 +82,7 @@ async def tomorrow(message: Message):
     if is_user_blocked(user_id):
         await message.answer("Ты плохо себя вёл, так что я тебя заблокировал 🤡.")
     else:
-        text = print_tomorrow_schedule()
+        text = perform_parsing_tomorrow(user_id)
         await message.answer(f"<b>Расписание на завтра:</b>{text}", parse_mode='HTML')
 
 
@@ -94,7 +92,7 @@ async def week(message: Message):
     if is_user_blocked(user_id):
         await message.answer("Ты плохо себя вёл, так что я тебя заблокировал 🤡.")
     else:
-        text = print_week_schedule()
+        text = perform_parsing_week(user_id)
         await message.answer(f"<b>Расписание на неделю:</b>{text}", parse_mode='HTML')
 
 
