@@ -4,7 +4,7 @@ from functions.tomorrow import perform_parsing_tomorrow
 from functions.week import perform_parsing_week
 
 # Создание или подключение к базе данных "schedule.db"
-connection = sqlite3.connect("schedule.db")
+connection = sqlite3.connect("db/schedule.db")
 cursor = connection.cursor()
 
 # Создание таблицы Schedule, если она не существует

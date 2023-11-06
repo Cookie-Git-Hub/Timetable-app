@@ -5,6 +5,8 @@ from selenium.webdriver.support.ui import Select
 import time
 import re
 
+
+
 def perform_parsing_week():
 
     options = wd.ChromeOptions()

@@ -1,7 +1,7 @@
 import sqlite3
 
 # Создание или подключение к базе данных "schedule.db"
-connection = sqlite3.connect("schedule.db")
+connection = sqlite3.connect("db/schedule.db")
 cursor = connection.cursor()
 
 # Запрос для извлечения расписания из таблицы "Schedule"
