@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 import time
 
-def perform_parsing_tomorrow(faculty, course, group):
+def perform_parsing(faculty, course, group):
     options = wd.ChromeOptions()
     options.add_argument("--headless")
     driver = wd.Chrome(options=options)
@@ -42,4 +42,4 @@ def perform_parsing_tomorrow(faculty, course, group):
     schedule_text = schedule_elements.text
 
     driver.quit()
-    return schedule_text
+    return [schedule_text, faculty, course, group]

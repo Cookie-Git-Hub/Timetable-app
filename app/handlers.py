@@ -28,8 +28,12 @@ class RegistrationStates(StatesGroup):
 
 @router.message(F.text == '/start')
 async def cmd_start(message: Message):
+    user_id = message.from_user.id
     await message.answer("Привет! Я бот с учебным расписанием для БГЭУ.\nЯ показываю расписание почти для всех факультетов дневной формы обучения 👾")
-    await message.answer("Чтобы я мог показать ваше расписание, пожалуйста, пройдите мини-регистрацию 📝", reply_markup=kb.registration)
+    if remove_user(user_id):
+        await message.answer("Чтобы я мог показать ваше расписание, пожалуйста, пройдите мини-регистрацию 📝", reply_markup=kb.registration)
+    else:
+        await message.answer("Ты лох 🤡.")
 
 
 @router.message(F.text.lower() == "регистрация 📝")
@@ -128,9 +132,10 @@ async def authors(message: Message):
 @router.message(F.text.lower() == "сменить данные ⚙️")
 async def change_data(message: Message):
     user_id = message.from_user.id
-    remove_user(user_id)
-    await message.answer("Ваш профиль был удалён. Пройдите регистрацию заново 📝", reply_markup=kb.registration)
-
+    if remove_user(user_id):
+        await message.answer("Ваш профиль был удалён. Пройдите регистрацию заново 📝", reply_markup=kb.registration)
+    else:
+        await message.answer("Ты лох 🤡.")
 
 @router.message(F.text.lower() == "назад 🔙")
 async def back(message: Message):

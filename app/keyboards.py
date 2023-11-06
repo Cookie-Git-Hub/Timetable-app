@@ -37,3 +37,5 @@ feedback_menu_kb = [
 feedback_menu = ReplyKeyboardMarkup(keyboard=feedback_menu_kb,
                                     resize_keyboard=True,
                                     input_field_placeholder='Выберите кнопку')
+
+# faculty_menu = 
