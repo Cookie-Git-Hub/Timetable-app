@@ -1,13 +1,6 @@
 {
     "users": [
         {
-            "id": 0,
-            "faculty": "",
-            "course": "",
-            "group": "",
-            "blocked": false
-        },
-        {
             "id": 851099138,
             "faculty": "\u0424\u0426\u042d",
             "course": "1",

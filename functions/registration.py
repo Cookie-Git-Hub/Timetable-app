@@ -1,5 +1,5 @@
-
 import json
+
 
 def user_registration(user_id, faculty, course, group):
     # Проверяем, зарегистрирован ли пользователь
@@ -31,6 +31,7 @@ def user_registration(user_id, faculty, course, group):
 
     return "Вы были успешно зарегистрированы!"
 
+
 def is_user_blocked(user_id):
     try:
         with open('db/users.json', 'r') as json_file:
@@ -44,6 +45,7 @@ def is_user_blocked(user_id):
             return True
 
     return False
+
 
 def remove_user(user_id):
     try:

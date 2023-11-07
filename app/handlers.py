@@ -135,11 +135,12 @@ async def change_data(message: Message):
     else:
         await message.answer("Ты лох 🤡.")
 
+
 @router.message(F.text.lower() == "назад 🔙")
 async def back(message: Message):
     await message.answer("Возвращаемся...", reply_markup=kb.main)
 
-    
+
 @router.message()
 async def echo(message: Message):
     await message.answer('Я тебя не понимаю...')

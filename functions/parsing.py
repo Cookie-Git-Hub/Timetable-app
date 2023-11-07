@@ -1,8 +1,40 @@
-
 from selenium import webdriver as wd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
+# from functions.db import fill_db
 import time
+import json
+import sqlite3
+
+
+def fill_db(schedule_text, faculty, course, group):
+    print(schedule_text)
+
+    normal_group = group.replace(" ", "_").replace("|", "_")
+
+    # Создание или подключение к базе данных "schedule.db"
+    connection = sqlite3.connect(
+        f"db/course_{course}/{faculty}/{normal_group}.db")
+    cursor = connection.cursor()
+
+    # Создание таблицы Schedule, если она не существует
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS Schedule (
+        Schedule TEXT NOT NULL
+    )
+    ''')
+
+    # Вставка данных в таблицу Schedule
+    for text in schedule_text:
+        cursor.execute('INSERT INTO Schedule (Schedule) VALUES (?)', (text,))
+
+    # Сохранение изменений и закрытие соединения
+    connection.commit()
+    connection.close()
+    return True
+
+
+
 
 def perform_parsing(faculty, course, group):
     options = wd.ChromeOptions()
@@ -42,4 +74,16 @@ def perform_parsing(faculty, course, group):
     schedule_text = schedule_elements.text
 
     driver.quit()
-    return [schedule_text, faculty, course, group]
+
+    fill_db(schedule_text, faculty, course, group)
+
+
+with open('db/users.json', 'r') as json_file:
+    data = json.load(json_file)
+    users = data.get("users", [])
+
+for user in users:
+    faculty = user.get("faculty", "")
+    course = user.get("course", "")
+    group = user.get("group", "")
+    perform_parsing(faculty, course, group)

@@ -16,8 +16,7 @@ def extract_text_between_words(input_text, start_word, stop_word):
 
 
 def perform_parsing_today(user_id):
-    schedule_text = []
-    schedule_text = user_data_variables(user_id)[0]
+    schedule_text = user_data_variables(user_id)
 
     def make_digits_bold(text):
         digits_bold = ''
@@ -61,8 +60,8 @@ def perform_parsing_today(user_id):
 
 
 def perform_parsing_tomorrow(user_id):
-    schedule_text = []
-    schedule_text = user_data_variables(user_id)[0]
+    schedule_text = user_data_variables(user_id)
+    print("\n\perform_parsing_tomorrow schedule_text\n" + str(schedule_text) + "\perform_parsing_tomorrow schedule_text\n\n")
     def make_digits_bold(text):
         digits_bold = ''
         for char in text:
@@ -91,6 +90,7 @@ def perform_parsing_tomorrow(user_id):
     start_day = f'{week_day1} ({formatted_date_day1})'
     stop_day = f'{week_day2} ({formatted_date_day2})'
     result = extract_text_between_words(schedule_text, start_day, stop_day)
+    print("\n\perform_parsing_tomorrow result\n" + result + "\perform_parsing_tomorrow result\n\n")
     if result is not None:
         text_with_bold_digits = make_digits_bold(result)
         return text_with_bold_digits
@@ -99,9 +99,9 @@ def perform_parsing_tomorrow(user_id):
 
 
 def perform_parsing_week(user_id):
-    schedule_text = []
-    schedule_text = user_data_variables(user_id)[0]
+    schedule_text = user_data_variables(user_id)
     print(schedule_text)
+
     def make_digits_bold(text):
         digits_bold = ''
         for char in text:

@@ -1,8 +1,8 @@
-from functions.parsing import perform_parsing
-from db import fill_db
+from functions.db_extraction import extraction_db
 
 import json
-    
+
+
 def get_user_data(user_id):
     with open('db/users.json', 'r') as json_file:
         data = json.load(json_file)
@@ -23,11 +23,9 @@ def user_data_variables(userid):
         faculty = user_data.get("faculty", "")
         course = user_data.get("course", "")
         group = user_data.get("group", "")
-        
-        schedule_text = []
-        schedule_text = perform_parsing(faculty, course, group) 
-        fill_db(schedule_text)
 
-        return schedule_text
+        result = extraction_db(faculty, course, group)
+        print("\n\nuser_data_variables\n" + str(result) + "\nuser_data_variables\n\n")
+        return result
     else:
         return "Вы не зарегистрированы. Пожалуйста, пройдите регистрацию."
