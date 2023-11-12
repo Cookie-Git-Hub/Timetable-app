@@ -1,14 +1,14 @@
 from selenium import webdriver as wd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-# from functions.db import fill_db
 import time
 import json
 import sqlite3
+import threading
 
 
-def fill_db(schedule_text, faculty, course, group):
-    print(schedule_text)
+async def fill_db(schedule_text, faculty, course, group):
+    print("fill_db" + course + "/" + faculty + "/" + group)
 
     normal_group = group.replace(" ", "_").replace("|", "_")
 
@@ -35,14 +35,13 @@ def fill_db(schedule_text, faculty, course, group):
 
 
 
-
-def perform_parsing(faculty, course, group):
+async def perform_parsing_one(faculty, course, group):
     options = wd.ChromeOptions()
     options.add_argument("--headless")
     driver = wd.Chrome(options=options)
     driver.get("http://bseu.by/schedule/")
 
-    def parsing():
+    async def parsing():
         faculty_select = Select(driver.find_element(By.ID, "faculty"))
         faculty_select.select_by_visible_text(f"{faculty}")
         time.sleep(0.2)
@@ -68,22 +67,27 @@ def perform_parsing(faculty, course, group):
 
         time.sleep(0.2)
 
-    parsing()
+    await parsing()
 
     schedule_elements = driver.find_element(By.ID, "content")
     schedule_text = schedule_elements.text
-
+    print("schedule_text" + schedule_text + "schedule_text")
     driver.quit()
 
-    fill_db(schedule_text, faculty, course, group)
+    await fill_db(schedule_text, faculty, course, group)
 
 
-with open('db/users.json', 'r') as json_file:
-    data = json.load(json_file)
-    users = data.get("users", [])
+async def perform_parsing():
+    with open('db/users.json', 'r') as json_file:
+        data = json.load(json_file)
+        users = data.get("users", [])
 
-for user in users:
-    faculty = user.get("faculty", "")
-    course = user.get("course", "")
-    group = user.get("group", "")
-    perform_parsing(faculty, course, group)
+    for user in users:
+        faculty = user.get("faculty", "")
+        course = user.get("course", "")
+        group = user.get("group", "")
+        # await test(faculty, course, group)
+        parsing_thread = threading.Thread(target=perform_parsing_one, args=(faculty, course, group))
+        parsing_thread.start()
+
+

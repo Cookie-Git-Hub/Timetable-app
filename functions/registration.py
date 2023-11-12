@@ -1,7 +1,9 @@
 import json
+from functions.parsing import perform_parsing_one
+import os
 
 
-def user_registration(user_id, faculty, course, group):
+async def user_registration(user_id, faculty, course, group):
     # Проверяем, зарегистрирован ли пользователь
     with open('db/users.json', 'r') as json_file:
         data = json.load(json_file)
@@ -29,10 +31,19 @@ def user_registration(user_id, faculty, course, group):
     with open('db/users.json', 'w') as json_file:
         json.dump(data, json_file, indent=4)
 
-    return "Вы были успешно зарегистрированы!"
+    normal_group = group.replace(" ", "_").replace("|", "_")
+    db_path = f"db/course_{course}/{faculty}/{normal_group}.db"
+    # Проверяем, существует ли файл базы данных
+    if not os.path.isfile(db_path):
+        # Файл не существует, вызываем соответствующую функцию или обработку ошибки
+        await perform_parsing_one(faculty, course, group)
+        return "Вы были успешно зарегистрированы!"
+    else:
+        return "Вы были успешно зарегистрированы!"
+   
 
 
-def is_user_blocked(user_id):
+async def is_user_blocked(user_id):
     try:
         with open('db/users.json', 'r') as json_file:
             data = json.load(json_file)
@@ -47,7 +58,7 @@ def is_user_blocked(user_id):
     return False
 
 
-def remove_user(user_id):
+async def remove_user(user_id):
     try:
         with open('db/users.json', 'r') as json_file:
             data = json.load(json_file)

@@ -3,20 +3,23 @@ import re
 from functions.distribution import user_data_variables
 
 
-def extract_text_between_words(input_text, start_word, stop_word):
+
+async def extract_text_between_words(input_text, start_word, stop_word):
     # Ищем индекс начала и конца искомого текста
     start_index = input_text.find(start_word)
     stop_index = input_text.find(stop_word)
     # Проверяем, что стартовое и стоповое слова найдены
     if start_index == -1 or stop_index == -1:
-        return None  # Возвращаем None, если слова не найдены
+        # Возвращаем 301, если слова не найдены
+        return "\nРасписание не найдено. Вероятно, сегодня выходной. Код 301"
     # Извлекаем текст между стартовым и стоповым словами
     extracted_text = input_text[start_index + len(start_word):stop_index]
     return extracted_text
 
 
-def perform_parsing_today(user_id):
-    schedule_text = user_data_variables(user_id)
+async def perform_parsing_today(user_id):
+    schedule_text = await user_data_variables(user_id)
+    print("perform_parsing_today")
 
     def make_digits_bold(text):
         digits_bold = ''
@@ -44,24 +47,25 @@ def perform_parsing_today(user_id):
 
     start_day = f'{week_day1} ({formatted_date_day1})'
     stop_day = f'{week_day2} ({formatted_date_day2})'
-    result = extract_text_between_words(schedule_text, start_day, stop_day)
+    result = await extract_text_between_words(schedule_text, start_day, stop_day)
     if result is not None:
         text_with_bold_digits = make_digits_bold(result)
         return text_with_bold_digits
     else:
         start_word = 'Расписание занятий в БГЭУ'
         stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
-        result2 = extract_text_between_words(
+        result2 = await extract_text_between_words(
             schedule_text, start_word, stop_word)
         if result2 is not None:
-            return '\nРасписание не найдено. Вероятно, сегодня выходной.'
+            return '\nРасписание не найдено. Вероятно, сегодня выходной. Код 302'
         else:
-            return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."
+            return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку. Код 303"
 
 
-def perform_parsing_tomorrow(user_id):
-    schedule_text = user_data_variables(user_id)
-    print("\n\perform_parsing_tomorrow schedule_text\n" + str(schedule_text) + "\perform_parsing_tomorrow schedule_text\n\n")
+async def perform_parsing_tomorrow(user_id):
+    schedule_text = await user_data_variables(user_id)
+    print("perform_parsing_tomorrow")
+
     def make_digits_bold(text):
         digits_bold = ''
         for char in text:
@@ -89,18 +93,17 @@ def perform_parsing_tomorrow(user_id):
 
     start_day = f'{week_day1} ({formatted_date_day1})'
     stop_day = f'{week_day2} ({formatted_date_day2})'
-    result = extract_text_between_words(schedule_text, start_day, stop_day)
-    print("\n\perform_parsing_tomorrow result\n" + result + "\perform_parsing_tomorrow result\n\n")
+    result = await extract_text_between_words(schedule_text, start_day, stop_day)
     if result is not None:
         text_with_bold_digits = make_digits_bold(result)
         return text_with_bold_digits
     else:
-        return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."
+        return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку. Код 304"
 
 
-def perform_parsing_week(user_id):
-    schedule_text = user_data_variables(user_id)
-    print(schedule_text)
+async def perform_parsing_week(user_id):
+    schedule_text = await user_data_variables(user_id)
+    print("perform_parsing_week")
 
     def make_digits_bold(text):
         digits_bold = ''
@@ -114,7 +117,7 @@ def perform_parsing_week(user_id):
     result_list = []
     start_word = 'к./ауд.'
     stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
-    result = extract_text_between_words(schedule_text, start_word, stop_word)
+    result = await extract_text_between_words(schedule_text, start_word, stop_word)
     result_parts = re.split(r'\n(?=\b[а-я]+\s\(\d+\.\d+\.\d+\))', result)
     for result_part in result_parts:
         result_list.append(result_part)
