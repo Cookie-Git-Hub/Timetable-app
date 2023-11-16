@@ -7,6 +7,7 @@ from functions.registration import user_registration, is_user_blocked, remove_us
 from functions.data_handling import perform_parsing_today, perform_parsing_tomorrow, perform_parsing_week
 from dotenv import load_dotenv
 import os
+import asyncio
 
 load_dotenv()
 router = Router()
@@ -28,7 +29,7 @@ class RegistrationStates(StatesGroup):
 async def cmd_start(message: Message):
     user_id = message.from_user.id
     await message.answer("Привет! Я бот с учебным расписанием для БГЭУ.\nЯ показываю расписание почти для всех факультетов дневной формы обучения 👾")
-    if await remove_user(user_id):
+    if remove_user(user_id):
         await message.answer("Чтобы я мог показать ваше расписание, пожалуйста, пройдите мини-регистрацию 📝", reply_markup=kb.registration)
     else:
         await message.answer("Ошибка стартовой регистрации. Код 201")
@@ -61,40 +62,38 @@ async def success(message: Message, state: FSMContext):
     user_id = message.from_user.id
     group = message.text
     await message.answer("После регистрации бот может загружать ваше расписание около 5 секунд, пожалуйста, подождите ⏳")
-    msg = await user_registration(user_id, faculty, course, group)
-    await message.answer(msg)
+    await asyncio.to_thread(user_registration, user_id, faculty, course, group)
     await message.answer("Приятного использования! Я буду очень рад, если, в случае неполадок, Вы сообщите мне об ошибке 🤖", reply_markup=kb.main)
     await state.clear()
-    
 
 
 @router.message(F.text.lower() == "сегодня 📖")
 async def today(message: Message):
     user_id = message.from_user.id
-    if await is_user_blocked(user_id):
+    if is_user_blocked(user_id):
         await message.answer("Ты плохо себя вёл, так что я тебя заблокировал 🤡")
     else:
-        text = await perform_parsing_today(user_id)
+        text = perform_parsing_today(user_id)
         await message.answer(f"<b>Расписание на сегодня:</b>{text}", parse_mode='HTML')
 
 
 @router.message(F.text.lower() == "завтра 📐")
 async def tomorrow(message: Message):
     user_id = message.from_user.id
-    if await is_user_blocked(user_id):
+    if is_user_blocked(user_id):
         await message.answer("Ты плохо себя вёл, так что я тебя заблокировал 🤡")
     else:
-        text = await perform_parsing_tomorrow(user_id)
+        text = perform_parsing_tomorrow(user_id)
         await message.answer(f"<b>Расписание на завтра:</b>{text}", parse_mode='HTML')
 
 
 @router.message(F.text.lower() == "неделя 📆")
 async def week(message: Message):
     user_id = message.from_user.id
-    if await is_user_blocked(user_id):
+    if is_user_blocked(user_id):
         await message.answer("Ты плохо себя вёл, так что я тебя заблокировал 🤡")
     else:
-        text = await perform_parsing_week(user_id)
+        text = perform_parsing_week(user_id)
         await message.answer(f"<b>Расписание на неделю:</b>{text}", parse_mode='HTML')
 
 
@@ -126,13 +125,13 @@ async def go_back(message: Message):
 
 @router.message(F.text.lower() == "авторы 👑")
 async def authors(message: Message):
-    await message.answer("<b>Авторы этого замечательного бота:</b>\n@CookieRevolution и @NAC_COOIlyaI", parse_mode='HTML')
+    await message.answer("<b>Авторы этого замечательного бота:</b>\n@CookieRevolution и @COO_NACTeam_IlyaI", parse_mode='HTML')
 
 
 @router.message(F.text.lower() == "сменить данные ⚙️")
 async def change_data(message: Message):
     user_id = message.from_user.id
-    if await remove_user(user_id):
+    if remove_user(user_id):
         await message.answer("Ваш профиль был удалён. Пройдите регистрацию заново 📝", reply_markup=kb.registration)
     else:
         await message.answer("Ошибка удаления профиля. Код 202")

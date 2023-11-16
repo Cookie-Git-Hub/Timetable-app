@@ -1,10 +1,10 @@
 import datetime
+import pytz
 import re
 from functions.distribution import user_data_variables
 
 
-
-async def extract_text_between_words(input_text, start_word, stop_word):
+def extract_text_between_words(input_text, start_word, stop_word):
     # Ищем индекс начала и конца искомого текста
     start_index = input_text.find(start_word)
     stop_index = input_text.find(stop_word)
@@ -17,8 +17,8 @@ async def extract_text_between_words(input_text, start_word, stop_word):
     return extracted_text
 
 
-async def perform_parsing_today(user_id):
-    schedule_text = await user_data_variables(user_id)
+def perform_parsing_today(user_id):
+    schedule_text = user_data_variables(user_id)
     print("perform_parsing_today")
 
     def make_digits_bold(text):
@@ -33,7 +33,11 @@ async def perform_parsing_today(user_id):
     days_of_week = ["понедельник", "вторник", "среда",
                     "четверг", "пятница", "суббота", "воскресенье"]
     # Получаем текущую дату
-    today = datetime.date.today()
+    moscow_tz = pytz.timezone('Europe/Moscow')
+    moscow_time = datetime.datetime.now(moscow_tz)
+    today = moscow_time.date()
+    # today = datetime.date.today()
+    
     # Вычисляем завтрашнюю и послезавтрашнюю даты
     day1 = today
     day2 = today + datetime.timedelta(days=1)
@@ -47,14 +51,14 @@ async def perform_parsing_today(user_id):
 
     start_day = f'{week_day1} ({formatted_date_day1})'
     stop_day = f'{week_day2} ({formatted_date_day2})'
-    result = await extract_text_between_words(schedule_text, start_day, stop_day)
+    result = extract_text_between_words(schedule_text, start_day, stop_day)
     if result is not None:
         text_with_bold_digits = make_digits_bold(result)
         return text_with_bold_digits
     else:
         start_word = 'Расписание занятий в БГЭУ'
         stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
-        result2 = await extract_text_between_words(
+        result2 = extract_text_between_words(
             schedule_text, start_word, stop_word)
         if result2 is not None:
             return '\nРасписание не найдено. Вероятно, сегодня выходной. Код 302'
@@ -62,8 +66,8 @@ async def perform_parsing_today(user_id):
             return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку. Код 303"
 
 
-async def perform_parsing_tomorrow(user_id):
-    schedule_text = await user_data_variables(user_id)
+def perform_parsing_tomorrow(user_id):
+    schedule_text = user_data_variables(user_id)
     print("perform_parsing_tomorrow")
 
     def make_digits_bold(text):
@@ -93,7 +97,7 @@ async def perform_parsing_tomorrow(user_id):
 
     start_day = f'{week_day1} ({formatted_date_day1})'
     stop_day = f'{week_day2} ({formatted_date_day2})'
-    result = await extract_text_between_words(schedule_text, start_day, stop_day)
+    result = extract_text_between_words(schedule_text, start_day, stop_day)
     if result is not None:
         text_with_bold_digits = make_digits_bold(result)
         return text_with_bold_digits
@@ -101,8 +105,8 @@ async def perform_parsing_tomorrow(user_id):
         return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку. Код 304"
 
 
-async def perform_parsing_week(user_id):
-    schedule_text = await user_data_variables(user_id)
+def perform_parsing_week(user_id):
+    schedule_text = user_data_variables(user_id)
     print("perform_parsing_week")
 
     def make_digits_bold(text):
@@ -117,7 +121,7 @@ async def perform_parsing_week(user_id):
     result_list = []
     start_word = 'к./ауд.'
     stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
-    result = await extract_text_between_words(schedule_text, start_word, stop_word)
+    result = extract_text_between_words(schedule_text, start_word, stop_word)
     result_parts = re.split(r'\n(?=\b[а-я]+\s\(\d+\.\d+\.\d+\))', result)
     for result_part in result_parts:
         result_list.append(result_part)
@@ -125,4 +129,11 @@ async def perform_parsing_week(user_id):
         result_list)
     text_with_bold_digits = make_digits_bold(result_text)
     return text_with_bold_digits
-#    return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку."
+
+def current_timezone():
+    current_time = datetime.datetime.now()
+    timezone = current_time.astimezone().tzinfo
+    print(f"Текущая дата и время: {current_time}")
+    print(f"Текущий часовой пояс: {timezone}")
+
+

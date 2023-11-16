@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 
-async def extraction_db(faculty, course, group):
+def extraction_db(faculty, course, group):
     normal_group = group.replace(" ", "_").replace("|", "_")
     db_path = f"db/course_{course}/{faculty}/{normal_group}.db"
     # Проверяем, существует ли файл базы данных

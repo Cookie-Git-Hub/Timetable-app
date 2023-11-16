@@ -3,7 +3,7 @@ from functions.parsing import perform_parsing_one
 import os
 
 
-async def user_registration(user_id, faculty, course, group):
+def user_registration(user_id, faculty, course, group):
     # Проверяем, зарегистрирован ли пользователь
     with open('db/users.json', 'r') as json_file:
         data = json.load(json_file)
@@ -36,14 +36,13 @@ async def user_registration(user_id, faculty, course, group):
     # Проверяем, существует ли файл базы данных
     if not os.path.isfile(db_path):
         # Файл не существует, вызываем соответствующую функцию или обработку ошибки
-        await perform_parsing_one(faculty, course, group)
+        perform_parsing_one(faculty, course, group)
         return "Вы были успешно зарегистрированы!"
     else:
         return "Вы были успешно зарегистрированы!"
-   
 
 
-async def is_user_blocked(user_id):
+def is_user_blocked(user_id):
     try:
         with open('db/users.json', 'r') as json_file:
             data = json.load(json_file)
@@ -58,7 +57,7 @@ async def is_user_blocked(user_id):
     return False
 
 
-async def remove_user(user_id):
+def remove_user(user_id):
     try:
         with open('db/users.json', 'r') as json_file:
             data = json.load(json_file)
