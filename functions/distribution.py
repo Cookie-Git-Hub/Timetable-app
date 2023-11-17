@@ -2,7 +2,7 @@ from functions.db_extraction import extraction_db
 import json
 
 def get_user_data(user_id):
-   with open('db/users.json', 'r') as json_file:
+   with open('db\users.json', 'r') as json_file:
        data = json.load(json_file)
        users = data.get("users", [])
    for user in users:

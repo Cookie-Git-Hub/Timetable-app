@@ -10,7 +10,7 @@ import threading
 
 
 def fill_db(schedule_text, faculty, course, group):
-    print("fill_db" + course + "/" + faculty + "/" + group)
+    print("fill_db" + course + "\\" + faculty + "\\" + group)
 
     normal_group = group.replace(" ", "_").replace("|", "_")
 
