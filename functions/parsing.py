@@ -1,7 +1,6 @@
 from selenium import webdriver as wd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-from functions.data_handling import current_timezone
 
 import time
 import json
@@ -10,7 +9,7 @@ import threading
 
 
 def fill_db(schedule_text, faculty, course, group):
-    print("fill_db" + course + "\\" + faculty + "\\" + group)
+    print("fill_db" + course + "//" + faculty + "//" + group)
 
     normal_group = group.replace(" ", "_").replace("|", "_")
 
@@ -105,4 +104,3 @@ def perform_parsing():
 
 
 perform_parsing()
-current_timezone()

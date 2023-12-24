@@ -4,7 +4,7 @@ import os
 
 def extraction_db(faculty, course, group):
     normal_group = group.replace(" ", "_").replace("|", "_")
-    db_path = f"db\course_{course}\{faculty}\{normal_group}.db"
+    db_path = f"db/course_{course}/{faculty}/{normal_group}.db"
     # Проверяем, существует ли файл базы данных
     if not os.path.isfile(db_path):
         # Файл не существует, вызываем соответствующую функцию или обработку ошибки
@@ -12,7 +12,7 @@ def extraction_db(faculty, course, group):
 
     # Создание или подключение к базе данных "schedule.db"
     connection = sqlite3.connect(
-        f"db\course_{course}\{faculty}\{normal_group}.db")
+        f"db/course_{course}/{faculty}/{normal_group}.db")
 
     cursor = connection.cursor()
 

@@ -1,5 +1,5 @@
 import datetime
-import pytz
+from dateutil import tz
 import re
 from functions.distribution import user_data_variables
 
@@ -11,7 +11,7 @@ def extract_text_between_words(input_text, start_word, stop_word):
     # Проверяем, что стартовое и стоповое слова найдены
     if start_index == -1 or stop_index == -1:
         # Возвращаем 301, если слова не найдены
-        return "\nРасписание не найдено. Вероятно, сегодня выходной. Код 301"
+        return "/nРасписание не найдено. Вероятно, сегодня выходной. Код 301"
     # Извлекаем текст между стартовым и стоповым словами
     extracted_text = input_text[start_index + len(start_word):stop_index]
     return extracted_text
@@ -33,8 +33,11 @@ def perform_parsing_today(user_id):
     days_of_week = ["понедельник", "вторник", "среда",
                     "четверг", "пятница", "суббота", "воскресенье"]
     # Получаем текущую дату
-    moscow_tz = pytz.timezone('Europe/Moscow')
-    moscow_time = datetime.datetime.now(moscow_tz)
+    # Устанавливаем временную зону для Москвы
+    moscow_tz = tz.gettz('Europe/Moscow')
+    # Получаем текущее время в указанной временной зоне
+    moscow_time = datetime.now(tz=moscow_tz)
+    # Получаем текущую дату
     today = moscow_time.date()
     # today = datetime.date.today()
     
@@ -61,9 +64,9 @@ def perform_parsing_today(user_id):
         result2 = extract_text_between_words(
             schedule_text, start_word, stop_word)
         if result2 is not None:
-            return '\nРасписание не найдено. Вероятно, сегодня выходной. Код 302'
+            return '/nРасписание не найдено. Вероятно, сегодня выходной. Код 302'
         else:
-            return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку. Код 303"
+            return "/nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку. Код 303"
 
 
 def perform_parsing_tomorrow(user_id):
@@ -102,7 +105,7 @@ def perform_parsing_tomorrow(user_id):
         text_with_bold_digits = make_digits_bold(result)
         return text_with_bold_digits
     else:
-        return "\nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку. Код 304"
+        return "/nОшибка. Повторите попытку через пару минут. Если ошибка не исчезнет, обратитесь в тех. поддержку. Код 304"
 
 
 def perform_parsing_week(user_id):
@@ -122,18 +125,14 @@ def perform_parsing_week(user_id):
     start_word = 'к./ауд.'
     stop_word = 'Сервис носит оценочный характер, сверка с расписанием у Деканата ОБЯЗАТЕЛЬНА!'
     result = extract_text_between_words(schedule_text, start_word, stop_word)
-    result_parts = re.split(r'\n(?=\b[а-я]+\s\(\d+\.\d+\.\d+\))', result)
+    result_parts = re.split(r'/n(?=/b[а-я]+/s/(/d+/./d+/./d+/))', result)
     for result_part in result_parts:
         result_list.append(result_part)
-    result_text = '\n------------------------------------------------------------------------------\n'.join(
+    result_text = '/n------------------------------------------------------------------------------/n'.join(
         result_list)
     text_with_bold_digits = make_digits_bold(result_text)
     return text_with_bold_digits
 
-def current_timezone():
-    current_time = datetime.datetime.now()
-    timezone = current_time.astimezone().tzinfo
-    print(f"Текущая дата и время: {current_time}")
-    print(f"Текущий часовой пояс: {timezone}")
+
 
 

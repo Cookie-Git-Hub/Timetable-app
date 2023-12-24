@@ -28,7 +28,7 @@ class RegistrationStates(StatesGroup):
 @router.message(F.text == '/start')
 async def cmd_start(message: Message):
     user_id = message.from_user.id
-    await message.answer("Привет! Я бот с учебным расписанием для БГЭУ.\nЯ показываю расписание почти для всех факультетов дневной формы обучения 👾")
+    await message.answer("Привет! Я бот с учебным расписанием для БГЭУ./nЯ показываю расписание почти для всех факультетов дневной формы обучения 👾")
     if remove_user(user_id):
         await message.answer("Чтобы я мог показать ваше расписание, пожалуйста, пройдите мини-регистрацию 📝", reply_markup=kb.registration)
     else:
@@ -125,7 +125,7 @@ async def go_back(message: Message):
 
 @router.message(F.text.lower() == "авторы 👑")
 async def authors(message: Message):
-    await message.answer("<b>Авторы этого замечательного бота:</b>\n@CookieRevolution и @COO_NACTeam_IlyaI", parse_mode='HTML')
+    await message.answer("<b>Авторы этого замечательного бота:</b>/n@CookieRevolution и @COO_NACTeam_IlyaI", parse_mode='HTML')
 
 
 @router.message(F.text.lower() == "сменить данные ⚙️")
